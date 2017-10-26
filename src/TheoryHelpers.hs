@@ -25,8 +25,11 @@ equivalence p =  transitive p
               &. symmetric  p
               &. reflexive  p
 
+partialOrder :: (Term -> Term -> Prop) -> Prop
+partialOrder p =  reflexive  p
+               &. transitive p
+               &. antisymmetric p
+
 totalOrder :: (Term -> Term -> Prop) -> Prop
-totalOrder p =  reflexive  p
-             &. transitive p
-             &. antisymmetric p
+totalOrder p =  partialOrder p
              &. forall (\x y -> p x y |. p y x)
