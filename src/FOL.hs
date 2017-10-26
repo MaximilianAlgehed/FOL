@@ -66,6 +66,7 @@ exists = E
 not' :: Prop -> Prop
 not' = Not
 
+{- First order representation -}
 data FOPropRep = All String FOPropRep
                | Exi String FOPropRep
                | Eql Term Term
