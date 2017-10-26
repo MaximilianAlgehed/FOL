@@ -85,6 +85,12 @@ p ==> q = not' p |. q
 (<==>) :: Prop -> Prop -> Prop
 p <==> q = (p ==> q) &. (q ==> p)
 
+infixr 0 ==>
+infix 1 <==>
+infix 2 ===
+infixl 3 |.
+infixl 4 &.
+
 {- First order representation -}
 data FOPropRep = All String FOPropRep
                | Exi String FOPropRep

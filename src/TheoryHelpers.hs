@@ -17,7 +17,16 @@ transitive p = forall $ \x y z -> p x y &. p y z ==> p x z
 symmetric :: (Term -> Term -> Prop) -> Prop
 symmetric p = forall $ \x y -> p x y <==> p y x
 
+antisymmetric :: (Term -> Term -> Prop) -> Prop
+antisymmetric p = forall $ \x y -> p x y &. p y x ==> x === y
+
 equivalence :: (Term -> Term -> Prop) -> Prop
 equivalence p =  transitive p
               &. symmetric  p
               &. reflexive  p
+
+totalOrder :: (Term -> Term -> Prop) -> Prop
+totalOrder p =  reflexive  p
+             &. transitive p
+             &. antisymmetric p
+             &. forall (\x y -> p x y |. p y x)
