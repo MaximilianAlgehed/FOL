@@ -1,3 +1,4 @@
+{-# LANGUAGE FlexibleInstances #-}
 module FOL where
 
 import Data.List
@@ -34,6 +35,10 @@ data Prop = A (Term -> Prop)
           | Not Prop
           | Pred String [Term]
 
+tptp :: [Prop] -> String
+tptp ps = unlines $ [ "fof(axm" ++ show i ++ ",axiom," ++ show p ++ ")"
+                    | (i, p) <- zip [0..] ps ]
+
 {- Utility for constructing predicates -}
 atomic :: String -> Prop 
 atomic p = Pred p []
@@ -48,11 +53,18 @@ ternaryPredicate :: String -> Term -> Term -> Term -> Prop
 ternaryPredicate n t u v = Pred n [t, u, v]
 
 {- Constructing propositions -} 
-forall :: (Term -> Prop) -> Prop
-forall = A
+class Binder a where
+  bind :: ((Term -> Prop) -> Prop) -> a -> Prop
 
-exists :: (Term -> Prop) -> Prop
-exists = E
+instance Binder (Term -> Prop) where
+  bind = ($)
+
+instance {-# OVERLAPPABLE #-} Binder p => Binder (Term -> p) where
+  bind b p = b $ \x -> bind b $ p x
+
+forall, exists :: Binder a => a -> Prop
+forall = bind A
+exists = bind E
 
 (===) :: Term -> Term -> Prop
 (===) = (:==:)
