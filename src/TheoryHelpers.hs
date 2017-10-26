@@ -13,3 +13,11 @@ reflexive p = forall $ \x -> p x x
 
 transitive :: (Term -> Term -> Prop) -> Prop
 transitive p = forall $ \x y z -> p x y &. p y z ==> p x z
+
+symmetric :: (Term -> Term -> Prop) -> Prop
+symmetric p = forall $ \x y -> p x y <==> p y x
+
+equivalence :: (Term -> Term -> Prop) -> Prop
+equivalence p =  transitive p
+              &. symmetric  p
+              &. reflexive  p

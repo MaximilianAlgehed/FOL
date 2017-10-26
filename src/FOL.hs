@@ -36,7 +36,7 @@ data Prop = A (Term -> Prop)
           | Pred String [Term]
 
 tptp :: [Prop] -> String
-tptp ps = unlines $ [ "fof(axm" ++ show i ++ ",axiom," ++ show p ++ ")"
+tptp ps = unlines $ [ "fof(axm" ++ show i ++ ",axiom," ++ show p ++ ")."
                     | (i, p) <- zip [0..] ps ]
 
 {- Utility for constructing predicates -}
@@ -81,6 +81,9 @@ not' = Not
 {- Derived combinators -}
 (==>) :: Prop -> Prop -> Prop
 p ==> q = not' p |. q
+
+(<==>) :: Prop -> Prop -> Prop
+p <==> q = (p ==> q) &. (q ==> p)
 
 {- First order representation -}
 data FOPropRep = All String FOPropRep
