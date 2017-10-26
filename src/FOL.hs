@@ -78,10 +78,15 @@ exists = bind E
 not' :: Prop -> Prop
 not' = Not
 
+{- Derived combinators -}
+(==>) :: Prop -> Prop -> Prop
+p ==> q = not' p |. q
+
 {- First order representation -}
 data FOPropRep = All String FOPropRep
                | Exi String FOPropRep
                | Eql Term Term
+               | Imp FOPropRep FOPropRep
                | And FOPropRep FOPropRep
                | Or  FOPropRep FOPropRep
                | Neg FOPropRep
