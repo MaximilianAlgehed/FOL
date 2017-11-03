@@ -35,9 +35,11 @@ data Prop = A (Term -> Prop)
           | Not Prop
           | Pred String [Term]
 
-tptp :: [Prop] -> String
-tptp ps = unlines $ [ "fof(axm" ++ show i ++ ",axiom," ++ show p ++ ")."
+tptp :: [Prop] -> Prop -> String
+tptp ps c = unlines [ "fof(axm" ++ show i ++ ",axiom," ++ show p ++ ")."
                     | (i, p) <- zip [0..] ps ]
+          ++
+          "fof(conj,conjecture," ++ show c ++ ")."
 
 {- Utility for constructing predicates -}
 atomic :: String -> Prop 
@@ -124,8 +126,8 @@ instance Show Prop where
 
 instance Show FOPropRep where
   showsPrec d rep = case rep of
-    All n p  -> showParen (d > 0) . showString $ "! [" ++ n ++ "] : " ++ show p
-    Exi n p  -> showParen (d > 0) . showString $ "? [" ++ n ++ "] : " ++ show p
+    All n p  -> showParen (d > 0) $ showString ("! [" ++ n ++ "] : ") . showsPrec 9 p
+    Exi n p  -> showParen (d > 0) $ showString ("? [" ++ n ++ "] : ") . showsPrec 9 p
     Eql a b  -> showString $ show a ++ " = " ++ show b
     And p q  -> showParen (d > 2) $ showsPrec 2 p . showString " & " . showsPrec 3 q
     Or  p q  -> showParen (d > 1) $ showsPrec 1 p . showString " | " . showsPrec 2 q
