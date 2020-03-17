@@ -35,6 +35,8 @@ data Prop = A (Term -> Prop)
           | Prop :||: Prop
           | Not Prop
           | Pred String [Term]
+          | FALSE
+          | TRUE
 
 tptp :: [Prop] -> Prop -> String
 tptp ps c = unlines [ "fof(axm" ++ show i ++ ",axiom," ++ show p ++ ")."
@@ -81,6 +83,10 @@ exists = bind E
 not' :: Prop -> Prop
 not' = Not
 
+false, true :: Prop
+false = FALSE
+true  = TRUE
+
 {- Derived combinators -}
 (==>) :: Prop -> Prop -> Prop
 p ==> q = not' p |. q
@@ -103,6 +109,8 @@ data FOPropRep = All String FOPropRep
                | Or  FOPropRep FOPropRep
                | Neg FOPropRep
                | Pre String [Term]
+               | FALSER
+               | TRUER
 
 gensym :: Int -> String
 gensym n
@@ -121,6 +129,8 @@ toFORep nv p = case p of
   p :||: q  -> Or  (toFORep nv p) (toFORep nv q)
   Not p     -> Neg (toFORep nv p)
   Pred n ts -> Pre n ts
+  FALSE     -> FALSER
+  TRUE      -> TRUER
 
 instance Show Prop where
   show = show . toFORep 0
@@ -134,3 +144,5 @@ instance Show FOPropRep where
     Or  p q  -> showParen (d > 1) $ showsPrec 1 p . showString " | " . showsPrec 2 q
     Neg p    -> showParen (d > 3) $ showString "~" . showsPrec 3 p
     Pre p ts -> showString $ p ++ arguments ts
+    FALSER   -> showString "false"
+    TRUER    -> showString "true"
