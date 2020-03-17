@@ -5,6 +5,7 @@ import Data.List
 
 data Term = Fun String [Term]
           | Var String
+          deriving (Ord, Eq) -- Structural equality and ordering
 
 instance Show Term where
   show (Fun n ts) = n ++ arguments ts
