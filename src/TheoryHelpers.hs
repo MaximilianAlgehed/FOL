@@ -34,7 +34,7 @@ partialOrder p =  reflexive  p
                &. antisymmetric p
 
 total :: (Term -> Term -> Prop) -> Prop
-total p = forall (\x y -> p x y |. p y x)
+total p = forall $ \x y -> not' (x === y) ==> (p x y |. p y x)
 
 totalOrder :: (Term -> Term -> Prop) -> Prop
 totalOrder p =  partialOrder p
