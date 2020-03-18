@@ -142,13 +142,13 @@ instance Show Prop where
 
 instance Show FOPropRep where
   showsPrec d rep = case rep of
-    All n p  -> showParen (d > 0) $ showString ("! [" ++ n ++ "] : ") . showsPrec 9 p
-    Exi n p  -> showParen (d > 0) $ showString ("? [" ++ n ++ "] : ") . showsPrec 9 p
+    All n p  -> showParen True $ showString ("! [" ++ n ++ "] : ") . showsPrec 9 p
+    Exi n p  -> showParen True $ showString ("? [" ++ n ++ "] : ") . showsPrec 9 p
     Eql a b  -> showString $ show a ++ " = " ++ show b
-    And p q  -> showParen (d > 2) $ showsPrec 2 p . showString " & " . showsPrec 3 q
-    Or  p q  -> showParen (d > 1) $ showsPrec 1 p . showString " | " . showsPrec 2 q
-    Neg p    -> showParen (d > 3) $ showString "~" . showsPrec 3 p
-    Imp p q  -> showParen (d > 0) $ showsPrec 1 p . showString " => " . showsPrec 0 q
+    And p q  -> showParen True $ showsPrec 2 p . showString " & " . showsPrec 3 q
+    Or  p q  -> showParen True $ showsPrec 1 p . showString " | " . showsPrec 2 q
+    Neg p    -> showParen True $ showString "~" . showsPrec 3 p
+    Imp p q  -> showParen True $ showsPrec 1 p . showString " => " . showsPrec 0 q
     Pre p ts -> showString $ p ++ arguments ts
     FALSER   -> showString "false"
     TRUER    -> showString "true"
