@@ -33,6 +33,7 @@ data Prop = A (Term -> Prop)
           | Term :==: Term
           | Prop :&&: Prop
           | Prop :||: Prop
+          | Prop :==>: Prop
           | Not Prop
           | Pred String [Term]
           | FALSE
@@ -89,7 +90,7 @@ true  = TRUE
 
 {- Derived combinators -}
 (==>) :: Prop -> Prop -> Prop
-p ==> q = not' p |. q
+(==>) = (:==>:)
 
 (<==>) :: Prop -> Prop -> Prop
 p <==> q = (p ==> q) &. (q ==> p)
@@ -127,6 +128,7 @@ toFORep nv p = case p of
   a :==: b  -> Eql a b
   p :&&: q  -> And (toFORep nv p) (toFORep nv q)
   p :||: q  -> Or  (toFORep nv p) (toFORep nv q)
+  p :==>: q -> Imp (toFORep nv p) (toFORep nv q)
   Not p     -> Neg (toFORep nv p)
   Pred n ts -> Pre n ts
   FALSE     -> FALSER
@@ -143,6 +145,7 @@ instance Show FOPropRep where
     And p q  -> showParen (d > 2) $ showsPrec 2 p . showString " & " . showsPrec 3 q
     Or  p q  -> showParen (d > 1) $ showsPrec 1 p . showString " | " . showsPrec 2 q
     Neg p    -> showParen (d > 3) $ showString "~" . showsPrec 3 p
+    Imp p q  -> showParen (d > 0) $ showsPrec 1 p . showString " => " . showsPrec 0 q
     Pre p ts -> showString $ p ++ arguments ts
     FALSER   -> showString "false"
     TRUER    -> showString "true"
