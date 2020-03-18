@@ -141,14 +141,14 @@ instance Show Prop where
   show = show . toFORep 0
 
 instance Show FOPropRep where
-  showsPrec d rep = case rep of
-    All n p  -> showParen True $ showString ("! [" ++ n ++ "] : ") . showsPrec 9 p
-    Exi n p  -> showParen True $ showString ("? [" ++ n ++ "] : ") . showsPrec 9 p
-    Eql a b  -> showString $ show a ++ " = " ++ show b
-    And p q  -> showParen True $ showsPrec 2 p . showString " & " . showsPrec 3 q
-    Or  p q  -> showParen True $ showsPrec 1 p . showString " | " . showsPrec 2 q
-    Neg p    -> showParen True $ showString "~" . showsPrec 3 p
-    Imp p q  -> showParen True $ showsPrec 1 p . showString " => " . showsPrec 0 q
-    Pre p ts -> showString $ p ++ arguments ts
-    FALSER   -> showString "false"
-    TRUER    -> showString "true"
+  show rep = case rep of
+    All n p  -> "! [" ++ n ++ "] : (" ++ show p ++ ")"
+    Exi n p  -> "? [" ++ n ++ "] : (" ++ show p ++ ")"
+    Eql a b  -> show a ++ " = " ++ show b
+    And p q  -> "(" ++ show p ++ ") & (" ++ show q ++ ")"
+    Or  p q  -> "(" ++ show p ++ ") | (" ++ show q ++ ")"
+    Neg p    -> "~(" ++ show p ++ ")"
+    Imp p q  -> "(" ++ show p ++ ") => (" ++ show q ++ ")"
+    Pre p ts -> p ++ arguments ts
+    FALSER   -> "false"
+    TRUER    -> "true"
