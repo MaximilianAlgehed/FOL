@@ -2,7 +2,7 @@ module Groups where
 
 import FOL
 import TheoryHelpers
-import Backend
+import E
 
 (*.) :: Term -> Term -> Term
 (*.) = binaryFunction "op"
