@@ -75,6 +75,9 @@ exists = bind E
 (===) :: Term -> Term -> Prop
 (===) = (:==:)
 
+(=/=) :: Term -> Term -> Prop
+t0 =/= t1 = not' $ t0 === t1
+
 (&.) :: Prop -> Prop -> Prop
 (&.) = (:&&:)
 
@@ -119,10 +122,10 @@ gensym n
   | otherwise = gensym (n `div` 26) ++ letter (n `mod` 26)
   where
     letter :: Int -> String
-    letter n = (:[]) $ ['A'..'Z'] !! n
+    letter m = (:[]) $ ['A'..'Z'] !! m
 
 toFORep :: Int -> Prop -> FOPropRep
-toFORep nv p = case p of
+toFORep nv prop = case prop of
   A body    -> let name = gensym nv in All name $ toFORep (nv + 1) (body (Var name))
   E body    -> let name = gensym nv in Exi name $ toFORep (nv + 1) (body (Var name))
   a :==: b  -> Eql a b
